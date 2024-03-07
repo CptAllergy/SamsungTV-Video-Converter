@@ -16,14 +16,11 @@ public class ConversionParameters {
     private static final String DEFAULT_FILE_FORMAT = "mp4";
 
 
-
     private final String audioCodec;
     private final int audioChannels;
     private final String videoCodec;
-
     private final String fileFormat;
     private final int audioTrack;
-
     private final int subtitleStreamCounter;
 
 

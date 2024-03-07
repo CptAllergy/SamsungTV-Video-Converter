@@ -71,6 +71,8 @@ public class FFmpegConverter {
     public ConversionParameters getConversionDetails(String filename, int audioTrack) throws IOException {
         // The number of subtitle streams to extract
         int subtitleStreamCounter = 0;
+        int audioStreamCounter = 0;
+
 
         // Store the subtitle tags
         Map<Integer, Map<String, String>> subtitleTags = new HashMap<>();
@@ -86,7 +88,15 @@ public class FFmpegConverter {
 
             if (codecType == FFmpegStream.CodecType.SUBTITLE) {
                 subtitleTags.put(subtitleStreamCounter++, tags);
+            } else if (codecType == FFmpegStream.CodecType.AUDIO) {
+                audioStreamCounter++;
             }
+        }
+
+        // Check if audio stream makes sense, otherwise set it to 0 (default)
+        if(audioTrack > audioStreamCounter - 1) {
+            audioTrack = 0;
+            System.out.println("Invalid audio_track chosen, defaulting to track number 1...Make sure that audio_track is correctly set in 'config.txt'.");
         }
 
         return new ConversionParameters(audioTrack, subtitleStreamCounter, subtitleTags);

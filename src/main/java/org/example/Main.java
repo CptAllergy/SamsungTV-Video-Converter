@@ -1,18 +1,35 @@
 package org.example;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
 
-        //TODO suppress logging
-
         File folder = new File("./input/");
         File[] listOfFiles = folder.listFiles();
 
-        // The track NUMBER starts at 1
-        int audioTrack = 1 - 1;
+        // Default to 0
+        int audioTrack = 0;
 
+        // Parse the 'config.txt' file
+        try {
+            Scanner scanner = new Scanner(new File("./config.txt"));
+            while (scanner.hasNext()) {
+                String line = scanner.nextLine().trim();
+                if (line.contains("audio_track")) {
+                    // Get the audio track and subtract 1
+                    audioTrack = Integer.parseInt(line.split("=")[1]) - 1;
+                }
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("\nERROR: Missing 'config.txt' file, make sure it exists.");
+            return;
+        }
+
+
+        // Check input folder
         if (listOfFiles == null || listOfFiles.length == 0) {
             System.out.println("Please make sure that an input folder exists and that it contains video files to process.");
             return;
@@ -25,7 +42,8 @@ public class Main {
             FFmpegConverter converter = new FFmpegConverter();
             for (File file : listOfFiles) {
                 String filename = file.getName();
-                System.out.println("Converting: " + filename);
+                System.out.println("\nConverting: " + filename);
+                System.out.println("Please wait, it's not frozen if it takes a while...");
 
                 // Get info from original file
                 ConversionParameters info = converter.getConversionDetails(filename, audioTrack);
@@ -44,6 +62,6 @@ public class Main {
         }
 
 
-        System.out.println("Process completed successfully!\nDe nada pai :)");
+        System.out.println("\nProcess completed successfully!\nDe nada pai :)");
     }
 }
