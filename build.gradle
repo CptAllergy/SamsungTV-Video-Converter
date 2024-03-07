@@ -1,15 +1,26 @@
 plugins {
     id 'java'
-    id 'application'
+}
+
+jar {
+    manifest {
+        attributes "Main-Class": "org.example.Main"
+    }
+
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
+tasks.withType(Zip).configureEach {
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
 }
 
 java {
 
 }
 
-application {
 
-}
 
 group = 'org.example'
 version = '0.1'
