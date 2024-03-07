@@ -1,7 +1,6 @@
 package org.example;
 
 import java.io.File;
-import java.io.IOException;
 
 public class Main {
     public static void main(String[] args) {
@@ -26,14 +25,13 @@ public class Main {
                 String filename = file.getName();
                 System.out.println("Converting: " + filename);
                 // Get info from original file
-                ConversionParameters info = converter.getConversionDetails(filename);
-                info.setAudioTrack(audioTrack);
+                ConversionParameters info = converter.getConversionDetails(filename, audioTrack);
                 // Convert the file
 
 
-                converter.extractSubtitles(filename, info);
+                //converter.extractSubtitles(filename, info);
 
-                //String targetFile = converter.convertVideo(filename, info);
+                String targetFile = converter.convertVideo(filename, info);
                 //System.out.println("Completed: " + targetFile);
             }
         } catch (Exception e) {

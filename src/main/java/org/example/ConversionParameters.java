@@ -11,13 +11,14 @@ public class ConversionParameters {
     public int audioChannels = 2;
     public String videoCodec = "h264";
 
-    private int audioTrack;
+    private final int audioTrack;
 
     private final int subtitleStreamCounter;
 
     Map<Integer, Map<String, String>> subtitleTags;
 
-    public ConversionParameters(int subtitleStreamCounter,  Map<Integer, Map<String, String>> subtitleTags) {
+    public ConversionParameters(int audioTrack, int subtitleStreamCounter,  Map<Integer, Map<String, String>> subtitleTags) {
+        this.audioTrack = audioTrack;
         this.subtitleStreamCounter = subtitleStreamCounter;
         this.subtitleTags = subtitleTags;
     }
@@ -29,10 +30,6 @@ public class ConversionParameters {
 
     public int getAudioTrack() {
         return audioTrack;
-    }
-
-    public void setAudioTrack(int audioTrack) {
-       this.audioTrack = audioTrack;
     }
 
     public String getSubtitleTag(int index) {

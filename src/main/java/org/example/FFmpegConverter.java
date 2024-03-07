@@ -66,7 +66,7 @@ public class FFmpegConverter {
         }
     }
 
-    public ConversionParameters getConversionDetails(String filename) throws IOException {
+    public ConversionParameters getConversionDetails(String filename, int audioTrack) throws IOException {
         // The number of subtitle streams to extract
         int subtitleStreamCounter = 0;
 
@@ -87,7 +87,7 @@ public class FFmpegConverter {
             }
         }
 
-        return new ConversionParameters(subtitleStreamCounter, subtitleTags);
+        return new ConversionParameters(audioTrack, subtitleStreamCounter, subtitleTags);
     }
 
     /**
@@ -156,9 +156,6 @@ public class FFmpegConverter {
 
         // Run a one-pass encode
         executor.createJob(builder).run();
-
-        // Or run a two-pass encode (which is better quality at the cost of being slower)
-        executor.createTwoPassJob(builder).run();
 
         return targetFile;
     }
