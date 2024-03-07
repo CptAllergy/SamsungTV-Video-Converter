@@ -1,5 +1,14 @@
 plugins {
     id 'java'
+    id 'application'
+}
+
+java {
+
+}
+
+application {
+
 }
 
 group = 'org.example'
@@ -14,8 +23,8 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter'
 
     implementation files('libs/ffmpeg.jar')
-    implementation group: 'org.slf4j', name: 'slf4j-simple', version: '2.0.6'
-    testImplementation group: 'org.slf4j', name: 'slf4j-simple', version: '2.0.6'
+    implementation group: 'org.slf4j', name: 'slf4j-nop', version: '2.0.6'
+    testImplementation group: 'org.slf4j', name: 'slf4j-nop', version: '2.0.6'
 }
 
 test {

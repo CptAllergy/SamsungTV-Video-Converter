@@ -22,7 +22,9 @@ public class FFmpegConverter {
     private static final String DEFAULT_FFPROBE_PATH = "C:/Program Files/ffmpeg/bin/ffprobe.exe";
 
 
-    private String inputFolder, outputFolder, ffmpegPath, ffprobePath;
+    private String inputFolder, outputFolder;
+    private final String ffmpegPath;
+    private final String ffprobePath;
     private final FFmpeg ffmpeg;
     private final FFprobe ffprobe;
 
@@ -78,7 +80,7 @@ public class FFmpegConverter {
 
         // Iterate over all the available streams
         for (FFmpegStream stream : probeResult.streams) {
-            System.out.println("Stream Type: " + stream.codec_type + " , Index:" + stream.index + " , Tags: " + stream.tags);
+            //System.out.println("Stream Type: " + stream.codec_type + " , Index:" + stream.index + " , Tags: " + stream.tags);
             FFmpegStream.CodecType codecType = stream.codec_type;
             Map<String, String> tags = stream.tags;
 
@@ -93,8 +95,8 @@ public class FFmpegConverter {
     /**
      * Extracts srt files from the given video
      *
-     * @param filename
-     * @param info
+     * @param filename The name of the file to extract the subtitles from (should be in input folder).
+     * @param info     The ConversionParameters to obtain information from the file.
      */
     public void extractSubtitles(String filename, ConversionParameters info) {
         // Create a folder to store the subtitles and result video
@@ -120,35 +122,26 @@ public class FFmpegConverter {
         String folderName = removeFileExtension(filename);
         new File("./" + outputFolder + "/" + folderName).mkdirs();
 
-        String targetFile = folderName + ".mp4";
+        String targetFile = folderName + "." + info.getFileFormat();
 
-        FFmpegBuilder builder = new FFmpegBuilder()
-                .setInput("./" + inputFolder + "/" + filename)
+        FFmpegBuilder builder = new FFmpegBuilder().
+                setInput("./" + inputFolder + "/" + filename)
                 .overrideOutputFiles(true) // Override the output if it exists
-
-                .addOutput("./" + outputFolder +  "/" + folderName + "/"  + targetFile)   // Filename for the destination
-                .setFormat("mp4")        // Format is inferred from filename, or can be set
-
-                .disableSubtitle()       // No subtiles
-
-//
-//                .addExtraArgs("-map", "0:a:" + info.getAudioTrack() )
-//                .addExtraArgs("-map", "0:v:0" )
-
-                .setAudioChannels(2)
-                .setAudioCodec("aac")
-                .setAudioSampleRate(48_000)  // at 48KHz
-                .setAudioBitRate(32768)      // at 32 kbit/s
-
-
-
-                .setVideoCodec("h264")
-                .setVideoFrameRate(24, 1)     // at 24 frames per second
-                .setVideoResolution(640, 480) // at 640x480 resolution
-                .setVideoBitRate(160000)
-
+                // Filename for the destination
+                .addOutput("./" + outputFolder + "/" + folderName + "/" + targetFile)
+                .setFormat(info.getFileFormat())
+                // No subtitles
+                .disableSubtitle()
+                // Video and audio stream choices
+                .addExtraArgs("-map", "0:a:" + info.getAudioTrack())
+                .addExtraArgs("-map", "0:v:0")
+                // Audio settings
+                .setAudioChannels(info.getAudioChannels())
+                .setAudioCodec(info.getAudioCodec())
+                // Video settings
+                .setVideoCodec(info.getVideoCodec())
+                // Toggle experimental mode
                 .setStrict(FFmpegBuilder.Strict.EXPERIMENTAL)
-
 
                 .done();
 

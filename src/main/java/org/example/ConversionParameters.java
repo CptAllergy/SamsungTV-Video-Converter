@@ -7,13 +7,26 @@ import java.util.Map;
 
 public class ConversionParameters {
 
-    public String audioCodec = "aac";
-    public int audioChannels = 2;
-    public String videoCodec = "h264";
+    private static final String DEFAULT_AUDIO_CODEC = "aac";
 
+    private static final int DEFAULT_AUDIO_CHANNELS = 2;
+
+    private static final String DEFAULT_VIDEO_CODEC = "h264";
+
+    private static final String DEFAULT_FILE_FORMAT = "mp4";
+
+
+
+    private final String audioCodec;
+    private final int audioChannels;
+    private final String videoCodec;
+
+    private final String fileFormat;
     private final int audioTrack;
 
     private final int subtitleStreamCounter;
+
+
 
     Map<Integer, Map<String, String>> subtitleTags;
 
@@ -21,6 +34,13 @@ public class ConversionParameters {
         this.audioTrack = audioTrack;
         this.subtitleStreamCounter = subtitleStreamCounter;
         this.subtitleTags = subtitleTags;
+
+        this.fileFormat = DEFAULT_FILE_FORMAT;
+
+        this.audioChannels = DEFAULT_AUDIO_CHANNELS;
+
+        this.audioCodec = DEFAULT_AUDIO_CODEC;
+        this.videoCodec = DEFAULT_VIDEO_CODEC;
     }
 
 
@@ -30,6 +50,22 @@ public class ConversionParameters {
 
     public int getAudioTrack() {
         return audioTrack;
+    }
+
+    public String getAudioCodec() {
+        return audioCodec;
+    }
+
+    public int getAudioChannels() {
+        return audioChannels;
+    }
+
+    public String getVideoCodec() {
+        return videoCodec;
+    }
+
+    public String getFileFormat() {
+        return fileFormat;
     }
 
     public String getSubtitleTag(int index) {
