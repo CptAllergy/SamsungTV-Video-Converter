@@ -1,2 +1,6 @@
 # Aqui deve ficar o número do audio. Por exemplo 1,2,3...
 audio_track=1
+
+# Aqui colocar "true" ou "false"
+extract_subtitles=true
+convert_video = true

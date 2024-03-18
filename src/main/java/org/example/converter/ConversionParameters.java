@@ -1,4 +1,4 @@
-package org.example;
+package org.example.converter;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -82,7 +82,7 @@ public class ConversionParameters {
             // Sort the keys to assure the same tag is used if applicable
             Collections.sort(sortedKeys);
             // Return the first key as name
-            subtitleName = index + "_" + tags.get(sortedKeys.getFirst());
+            subtitleName = index + "_" + tags.get(sortedKeys.get(0));
         }
         subtitleName = subtitleName.replace(" ", "_");
         return subtitleName.replaceAll("[^A-Za-z0-9_-]", "");

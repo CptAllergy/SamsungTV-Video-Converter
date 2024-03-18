@@ -1,4 +1,4 @@
-package org.example;
+package org.example.converter;
 
 
 import net.bramp.ffmpeg.FFmpeg;

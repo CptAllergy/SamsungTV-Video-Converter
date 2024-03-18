@@ -1,5 +1,9 @@
 package org.example;
 
+import org.example.converter.ConfigParser;
+import org.example.converter.ConversionParameters;
+import org.example.converter.FFmpegConverter;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
@@ -10,19 +14,9 @@ public class Main {
         File folder = new File("./input/");
         File[] listOfFiles = folder.listFiles();
 
-        // Default to 0
-        int audioTrack = 0;
-
-        // Parse the 'config.txt' file
+        ConfigParser config;
         try {
-            Scanner scanner = new Scanner(new File("./config.txt"));
-            while (scanner.hasNext()) {
-                String line = scanner.nextLine().trim();
-                if (line.contains("audio_track")) {
-                    // Get the audio track and subtract 1
-                    audioTrack = Integer.parseInt(line.split("=")[1]) - 1;
-                }
-            }
+            config = new ConfigParser("./config.txt");
         } catch (FileNotFoundException e) {
             System.out.println("\nERROR: Missing 'config.txt' file, make sure it exists.");
             return;
@@ -38,22 +32,34 @@ public class Main {
         // Create output folder
         new File("./" + "output").mkdirs();
 
+
+        System.out.println("Starting Samsung Converter with the following settings:\n"
+                + "audio_track=" + config.getAudioTrack() + "\n"
+                + "extract_subtitles=" + config.isSubtitleExtractionEnabled() + "\n"
+                + "convert_video=" + config.isVideoConversionEnabled() + "\n");
+
         try {
             FFmpegConverter converter = new FFmpegConverter();
             for (File file : listOfFiles) {
                 String filename = file.getName();
-                System.out.println("\nConverting: " + filename);
-                System.out.println("Please wait, it's not frozen if it takes a while...");
+                System.out.println("\nProcessing: " + filename);
 
                 // Get info from original file
-                ConversionParameters info = converter.getConversionDetails(filename, audioTrack);
+                ConversionParameters info = converter.getConversionDetails(filename, config.getAudioTrack());
 
                 // Extract the subtitles
-                converter.extractSubtitles(filename, info);
+                if (config.isSubtitleExtractionEnabled()) {
+                    converter.extractSubtitles(filename, info);
+                    System.out.println("Subtitles extracted");
+                }
 
                 // Convert the file
-                String targetFile = converter.convertVideo(filename, info);
-                System.out.println("Completed: " + targetFile);
+                if (config.isVideoConversionEnabled()) {
+                    System.out.println("Please wait, it's not frozen if it takes a while...");
+                    String targetFile = converter.convertVideo(filename, info);
+                    System.out.println("Converted: " + targetFile);
+                }
+
             }
         } catch (Exception e) {
             System.out.println("\nERROR: Process failed with exception: " + e
